@@ -16,10 +16,11 @@ kubectl exec -it apigee-cassandra-client -n apigee -- bash
 ```
 4. Go to apigee cassandra pod one after the other and take the backup snapshot
 
-kubectl exec -it apigee-cassandra-default-0 -n apigee -- bash
 ```
+kubectl exec -it apigee-cassandra-default-0 -n apigee -- bash
 ./backup_data.sh <<orgname>>
 ```
+
 5. Repeat Step 4 for other pods
 
 
