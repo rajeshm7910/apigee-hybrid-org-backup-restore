@@ -1,0 +1,29 @@
+Backup and  Restore Demo
+
+
+Setup
+------
+
+kubectl exec -it apigee-cassandra-client -n apigee -- bash
+cqlsh ${CASSANDRA_SEEDS} -u ${APIGEE_DML_USER} -p ${APIGEE_DML_PASSWORD} --ssl  
+SELECT * FROM kms_anthos_vm_example1_hybrid.api_product;
+
+Backup
+#Copy the Schema to file
+COPY kms_anthos_vm_example1_hybrid.api_product TO 'cassandra_dump/kms_anthos_vm_example1_hybrid.api_product.csv' WITH HEADER=true AND DELIMITER='|' ;
+
+
+#Disaster Simulation
+TRUNCATE kms_anthos_vm_example1_hybrid.api_product
+
+Restore
+COPY kms_anthos_vm_example1_hybrid.api_product FROM 'cassandra_dump/kms_anthos_vm_example1_hybrid.api_product.csv' WITH HEADER=true AND DELIMITER='|' ;
+
+####Automated from Command line #####
+
+echo "COPY kms_anthos_vm_example1_hybrid.api_product TO 'cassandra_dump/kms_anthos_vm_example1_hybrid.api_product.csv' WITH HEADER=true AND DELIMITER='|' ;" > backup.sql
+echo "COPY kms_anthos_vm_example1_hybrid.api_product FROM 'cassandra_dump/kms_anthos_vm_example1_hybrid.api_product.csv' WITH HEADER=true AND DELIMITER='|' ;" > restore.sql
+
+cqlsh ${CASSANDRA_SEEDS} -u ${APIGEE_DML_USER} -p ${APIGEE_DML_PASSWORD} -f backup.sql --ssl  
+cqlsh ${CASSANDRA_SEEDS} -u ${APIGEE_DML_USER} -p ${APIGEE_DML_PASSWORD} -e  'TRUNCATE kms_anthos_vm_example1_hybrid.api_product' --ssl  
+cqlsh ${CASSANDRA_SEEDS} -u ${APIGEE_DML_USER} -p ${APIGEE_DML_PASSWORD} -f restore.sql --ssl  
