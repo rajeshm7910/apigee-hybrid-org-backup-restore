@@ -14,14 +14,14 @@ kubectl exec -it apigee-cassandra-client -n apigee -- bash
 ```
 ./backup_schema.sh <<org-name>>
 ```
-4. Go to apigee cassandra pod one after the other and take the backup snapshot
+4. Go to apigee cassandra pod one by one and take the snapshot backup
 
 ```
 kubectl exec -it apigee-cassandra-default-0 -n apigee -- bash
 ./backup_data.sh <<orgname>>
 ```
 
-5. Repeat Step 4 for other pods
+5. Repeat Step 4 for all pods
 
 
 ### Restore Steps
@@ -55,4 +55,9 @@ Go to the Cassandra Client
 for ex:
 ```
 ./restore_refresh.sh anthos-bm-example1 20.0.0.45 cassandra apigee123
+
+**Note** 20.0.0.45 is pod ip of the cassandra pod apigee-cassandra-default-0 for which data is restored in step 4
+
 ```
+
+6. Repeat Step 4 and 5 for other Cassandra pods.
